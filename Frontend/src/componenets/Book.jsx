@@ -3,30 +3,43 @@
 import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { makeBooking } from "../redux/actions";
+import { createBooking } from "../api";
 import { FaPlus } from "react-icons/fa";
+
 const Book = () => {
-  const data = useSelector((state) => state.data);
-  const size = data.length;
+  const bookingsCount = useSelector((state) => state.data.length);
   const dispatch = useDispatch();
   const [bookingData, setBookingData] = useState({});
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   const handleChange = (e) => {
     const newBookingData = { ...bookingData };
     newBookingData[e.target.name] = e.target.value;
     setBookingData(newBookingData);
+    setError(null);
   };
 
-  const handleBook = (e) => {
-    e.preventDefault();
-    if (size >= 3) {
-      alert("Sorry, you can not book more than 3");
-    } else {
-      if (Object.keys(bookingData).length === 5) {
-        // console.log({ ...bookingData, id: size + 1 });
-        dispatch(makeBooking({ ...bookingData, id: size + 1 }));
-      } else {
-        alert("please select data properly");
-      }
+  const handleBook = async (e) => {
+    e?.preventDefault?.();
+    if (bookingsCount >= 3) {
+      setError("Maximum 3 bookings allowed");
+      return;
+    }
+    if (Object.keys(bookingData).length !== 5) {
+      setError("Please fill all fields");
+      return;
+    }
+    setLoading(true);
+    setError(null);
+    try {
+      const created = await createBooking(bookingData);
+      dispatch(makeBooking(created));
+      setBookingData({});
+    } catch (err) {
+      setError(err.message || "Failed to create booking");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -40,8 +53,9 @@ const Book = () => {
               <select
                 className="outline-none px-2 py-2 w-full"
                 name="from"
+                value={bookingData.from || ""}
                 required
-                onChange={(e) => handleChange(e)}
+                onChange={handleChange}
               >
                 <option value="" hidden>
                   Please Select
@@ -61,8 +75,9 @@ const Book = () => {
               <select
                 className="outline-none px-2 py-2 w-full"
                 name="to"
+                value={bookingData.to || ""}
                 required
-                onChange={(e) => handleChange(e)}
+                onChange={handleChange}
               >
                 <option value="" hidden>
                   Please Select
@@ -79,10 +94,11 @@ const Book = () => {
             <p>Journey Date</p>
             <input
               type="date"
-              className="outline-none px-2 py-2 w-full date"
+              className="outline-none px-2 py-2 w-full"
               name="date"
+              value={bookingData.date || ""}
               required
-              onChange={(e) => handleChange(e)}
+              onChange={handleChange}
             />
           </div>
 
@@ -92,8 +108,9 @@ const Book = () => {
               <select
                 className="outline-none px-2 py-2 w-full"
                 name="guests"
+                value={bookingData.guests || ""}
                 required
-                onChange={(e) => handleChange(e)}
+                onChange={handleChange}
               >
                 <option value="" hidden>
                   Please Select
@@ -107,13 +124,14 @@ const Book = () => {
           </div>
 
           <div className="py-1.5 px-2.5 flex-1 border-r-2">
-            <p>className</p>
+            <p>Class</p>
             <div className="flex flex-row">
               <select
                 className="outline-none px-2 py-2 w-full"
                 name="ticketclassName"
+                value={bookingData.ticketclassName || ""}
                 required
-                onChange={(e) => handleChange(e)}
+                onChange={handleChange}
               >
                 <option value="" hidden>
                   Please Select
@@ -124,13 +142,15 @@ const Book = () => {
             </div>
           </div>
 
+          {error && <p className="text-red-500 text-sm px-2 py-1">{error}</p>}
           <button
-            onClick={(e) => handleBook(e)}
-            className="inline-flex items-center bg-indigo-500 text-white px-8 py-1 space-x-2"
-            type="submit"
+            type="button"
+            onClick={handleBook}
+            disabled={loading || bookingsCount >= 3}
+            className="inline-flex items-center bg-indigo-500 hover:bg-indigo-600 disabled:opacity-50 disabled:cursor-not-allowed text-white px-8 py-2 rounded space-x-2 transition-colors"
           >
-            <FaPlus/>
-            <span className="text-sm  ">Book</span>
+            <FaPlus />
+            <span className="text-sm">{loading ? "Booking..." : "Book"}</span>
           </button>
         </form>
       </div>
