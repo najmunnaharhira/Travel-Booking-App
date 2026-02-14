@@ -44,8 +44,9 @@ const Header = () => {
           </div>
         ) : (
           <button
+            type="button"
             onClick={() => setShowLogin(true)}
-            className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-1.5 rounded font-medium"
+            className="bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white px-6 py-1.5 rounded font-medium cursor-pointer transition-colors"
           >
             Login
           </button>
