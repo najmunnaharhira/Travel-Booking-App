@@ -24,3 +24,25 @@ export async function deleteBooking(id) {
     throw new Error(data.error || "Failed to delete booking");
   }
 }
+
+export async function loginUser(email, password) {
+  const res = await fetch(`${API_BASE}/auth/login`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, password }),
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || "Login failed");
+  return data;
+}
+
+export async function signupUser(email, password, name) {
+  const res = await fetch(`${API_BASE}/auth/signup`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, password, name }),
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || "Sign up failed");
+  return data;
+}

@@ -5,7 +5,7 @@ import { deleteBooking } from "../redux/actions";
 import { deleteBooking as deleteBookingApi } from "../api";
 
 const Table = () => {
-  const data = useSelector((state) => state.data);
+  const data = useSelector((state) => state.booking?.data ?? []);
   const dispatch = useDispatch();
   const [deletingId, setDeletingId] = useState(null);
 

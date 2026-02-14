@@ -14,10 +14,10 @@ const bookingReducer = (state = initialState, action) => {
     case BOOKING:
       const newData = [...state.data];
       newData.push(action.payload);
-      return { data: newData };
+      return { ...state, data: newData };
     case DELETE:
       const filteredData = state.data.filter((d) => String(d.id) !== String(action.payload));
-      return { data: filteredData };
+      return { ...state, data: filteredData };
     default:
       return state;
   }

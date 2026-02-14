@@ -1,4 +1,4 @@
-import { BOOKING, DELETE, SET_BOOKINGS } from "./actionTypes";
+import { BOOKING, DELETE, SET_BOOKINGS, LOGIN, LOGOUT } from "./actionTypes";
 
 export const makeBooking = (data) => ({
   type: BOOKING,
@@ -14,3 +14,6 @@ export const setBookings = (bookings) => ({
   type: SET_BOOKINGS,
   payload: bookings,
 });
+
+export const login = (user) => ({ type: LOGIN, payload: user });
+export const logout = () => ({ type: LOGOUT });

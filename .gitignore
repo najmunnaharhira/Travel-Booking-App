@@ -4,6 +4,6 @@ dist-ssr
 .env
 .env.local
 .env.*.local
-Backend/data
+Backend/data/*.json
 *.log
 .DS_Store

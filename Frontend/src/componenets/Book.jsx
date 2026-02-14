@@ -7,7 +7,7 @@ import { createBooking } from "../api";
 import { FaPlus } from "react-icons/fa";
 
 const Book = () => {
-  const bookingsCount = useSelector((state) => state.data.length);
+  const bookingsCount = useSelector((state) => state.booking?.data?.length ?? 0);
   const dispatch = useDispatch();
   const [bookingData, setBookingData] = useState({});
   const [loading, setLoading] = useState(false);
